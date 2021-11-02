@@ -24,6 +24,7 @@ dict0 = {
                 ],
         }
 
+
 for year in range(1958, 2014):
     
     dict0['year'] = year
@@ -43,10 +44,7 @@ for year in range(1958, 2014):
     time = obj.createDimension('time', 12)
     lat = obj.createDimension('lat', None)
     lon = obj.createDimension('lon', None)
-    
 
-# gfdgffd
-#@fd df 
     
 
 
