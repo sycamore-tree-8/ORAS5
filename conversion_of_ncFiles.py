@@ -25,13 +25,13 @@ nc_lst = sorted([x for x in lst if ('.nc' in x[-4:])])
 
 #print(nc_lst)
 
-start = True
 
 for cyear in range(1958, 1963):
     
     annual_lst = sorted([y for y in nc_lst if ('{}'.format(cyear) in y[:])])
-    
-    for i, output in enumerate(annual_lst[:12]):
+
+    start = True    
+    for i, output in enumerate(annual_lst[:]):
         
         tm1 = tm.time()
         full_data_path = '{}/{}'.format(files_path, output)
@@ -51,7 +51,6 @@ for cyear in range(1958, 1963):
             box = np.concatenate((box, arr), axis=0)
             times.append(itime[0]) # np.concatenate((times, itime), axis=0)
             
-        start = False
     
         tm2 = tm.time()
        # print('{}/{} {:.2f}'.format(i, len(nc_lst), tm2 - tm1))
@@ -59,7 +58,27 @@ for cyear in range(1958, 1963):
         if i == 11:
             lons = ds.variables['nav_lon'].values
             lats = ds.variables['nav_lat'].values
+
+        start = False
+
             
-    fileName = 'sshData_{}'.format(cyear)
+    fileName = 'sshData_{}.nc'.format(cyear)
     print(fileName)
+       
+    ds = xr.Dataset(
+        {"ssh": (("time", "lat", "lon" ), box),
+         "lats": (("lat", "lon" ), lats),
+         "lons": (("lat", "lon" ), lons),
+         'times' : (("time"), times)
+         },
+        coords={
+            "time": range(12),
+            "lat": range(1021),
+            "lon": range(1442),
+        },
+        
+     )
+    
+    
+    ds.to_netcdf(fileName)
         
