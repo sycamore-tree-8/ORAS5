@@ -24,7 +24,7 @@ lst = os.listdir(files_path)
 nc_lst = sorted([x for x in lst if ('.nc' in x[-4:])]) 
 
 #print(nc_lst)
-
+    
 
 for cyear in range(1958, 1963):
     
@@ -36,49 +36,56 @@ for cyear in range(1958, 1963):
         tm1 = tm.time()
         full_data_path = '{}/{}'.format(files_path, output)
         
-        ds = xr.open_dataset(full_data_path)
+        obj = nc4.Dataset(full_data_path)   
+        ivars = obj.variables.keys()
+        lons   = obj.variables['nav_lon'][:]
+    #    obj.close()
+        
+    #    ds = xr.open_dataset(full_data_path)
     #    ivars = {}
     #    for key in ds.variables.keys():
     #        ivars[key] = ds.variables[key].values
-     
-        arr = ds.variables['sossheig'].values
-        itime = ds.variables['time_counter'].values
-        
-        if start == True:
-            box = arr[:]
-            times = [itime[0]]
-        else:
-            box = np.concatenate((box, arr), axis=0)
-            times.append(itime[0]) # np.concatenate((times, itime), axis=0)
-            
-    
-        tm2 = tm.time()
-       # print('{}/{} {:.2f}'.format(i, len(nc_lst), tm2 - tm1))
-        
-        if i == 11:
-            lons = ds.variables['nav_lon'].values
-            lats = ds.variables['nav_lat'].values
-
-        start = False
-
-            
-    fileName = 'sshData_{}.nc'.format(cyear)
-    print(fileName)
        
-    ds = xr.Dataset(
-        {"ssh": (("time", "lat", "lon" ), box),
-         "lats": (("lat", "lon" ), lats),
-         "lons": (("lat", "lon" ), lons),
-         'times' : (("time"), times)
-         },
-        coords={
-            "time": range(12),
-            "lat": range(1021),
-            "lon": range(1442),
-        },
+       #  arr = obj.variables['sossheig'].values
+       #  itime = obj.variables['time_counter'].values
         
-     )
+       #  if start == True:
+       #      box = arr[:]
+       #      times = [itime[0]]
+       #  else:
+       #      box = np.concatenate((box, arr), axis=0)
+       #      times.append(itime[0]) # np.concatenate((times, itime), axis=0)
+            
+    
+       #  tm2 = tm.time()
+       # # print('{}/{} {:.2f}'.format(i, len(nc_lst), tm2 - tm1))
+        
+       #  if i == 11:
+       #      lons = obj.variables['nav_lon'].values
+       #      lats = obj.variables['nav_lat'].values
+
+       #  start = False
+
+            
+    # fileName = 'sshData_{}.nc'.format(cyear)
+    # print(fileName)
+       
+
+    # obj = xr.Dataset(
+    #     {"ssh": (("time", "lat", "lon" ), box),
+    #      "lats": (("lat", "lon" ), lats),
+    #      "lons": (("lat", "lon" ), lons),
+    #      'times' : (("time"), times)
+    #      },
+    #     coords={
+    #         "time": range(12),
+    #         "lat": range(1021),
+    #         "lon": range(1442),
+    #     },
+        
+    #  )
     
     
-    ds.to_netcdf(fileName)
+    # obj.to_netcdf(fileName)
+        
         
